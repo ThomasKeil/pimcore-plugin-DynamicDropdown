@@ -1,0 +1,46 @@
+0.0.3
+=====
+- Added translations
+- Source Folder is now Drag&Drop instead of spinner
+- Allowed Class now selectable by PimCore populated Combobox
+- Inputtype is now in "select" instead of "other"
+- Added nice name and description in plugin.xml
+- Added nice icons
+
+0.0.4
+=====
+- Now object relations are stored instead of the object's value
+  The content is thus truely dynamic
+- Some housekeeping stuff like added comments, remove unecessary code, etc
+
+0.0.5
+=====
+- The content if the dropdown can now also be internationalized with the localized fields data component
+
+0.0.6
+=====
+- A little update to ensure compliance with http://www.pimcore.org/issues/browse/PIMCORE-1165
+
+0.0.7
+=====
+- Dashes ("-") are now supported in the name of the containing folder (reported by frieda)
+
+0.0.8 (Extension Hub Rev. 3)
+============================
+Patch kindly provided by Thomas Akkermans (http://www.pimcore.org/board/memberlist.php?mode=viewprofile&u=61):
+- Added multiselect field
+- Handling of submitted parameters now with _getParam() instead of $_GET/$_POST
+- New translations
+- Fixed some indentions in the source
+  
+0.0.9
+=============================
+- Setup: method name dropdown is now properly refreshed.
+  Thanks to quintworld for reporting.
+- List can now be sorted by id and value, configurable in the setup.
+  Tanks to quintworld for suggesting.
+- The object can now be added to the column configuration.
+  Please bear in mind that most of the functionality is borrowed by the href-tag,
+  and like the href-tag the grid can't be sorted by this column.
+  Thanks to quintworld for reporting.
+- Recursive searching in the specified folder, configurable in the setup.
