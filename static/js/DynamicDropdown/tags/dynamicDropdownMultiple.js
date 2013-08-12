@@ -35,7 +35,7 @@ pimcore.object.tags.dynamicDropdownMultiple = Class.create(pimcore.object.tags.m
                 source_parent: fieldConfig.source_parentid,
                 source_methodname: fieldConfig.source_methodname,
                 source_classname: fieldConfig.source_classname,
-                source_recursive: layoutConf.source_recursive,
+                source_recursive: fieldConfig.source_recursive,
                 current_language: pimcore.settings.language
             },
             success: function(data) {
@@ -44,5 +44,15 @@ pimcore.object.tags.dynamicDropdownMultiple = Class.create(pimcore.object.tags.m
         });
         
         this.fieldConfig.options = remote_data;			 
+    },
+
+    getGridColumnEditor:function (field) {
+        return null;
+    },
+
+    getGridColumnFilter:function (field) {
+        return null;
     }
+
+
 });
