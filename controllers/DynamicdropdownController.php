@@ -22,7 +22,7 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 	 */
 	public function optionsAction() {
 
-		$filter = new Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9/\-]@", "replace" => ""));
+		$filter = new Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9/\-_]@", "replace" => ""));
 		$parentFolderPath = $filter->filter($this->_getParam("source_parent"));
 		
 		
