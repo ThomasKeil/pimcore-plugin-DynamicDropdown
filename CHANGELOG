@@ -44,3 +44,4 @@ Patch kindly provided by Thomas Akkermans (http://www.pimcore.org/board/memberli
   and like the href-tag the grid can't be sorted by this column.
   Thanks to quintworld for reporting.
 - Recursive searching in the specified folder, configurable in the setup.
+- Add composer support
