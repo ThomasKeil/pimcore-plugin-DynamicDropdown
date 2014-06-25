@@ -7,7 +7,7 @@
         <!-- Plugin Server Host-->
         <pluginServer></pluginServer>
         <!-- Version and Revision are updated by createRevision Script !-->
-        <pluginVersion>0.0.8</pluginVersion>
+        <pluginVersion>0.0.9</pluginVersion>
         <pluginRevision>1</pluginRevision>
         <pluginBuildTimestamp>1336112744</pluginBuildTimestamp>
         <!-- <pluginIframeSrc>/plugin/DynamicDropdown/admin/settings</pluginIframeSrc> -->
