@@ -61,7 +61,12 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
     if ($folder) {
 
       $source = $this->_getParam("source_methodname");
-      $object_name = "Object_".ucfirst($this->_getParam("source_classname"));
+      
+      if (Pimcore_Version::getRevision() > 3303) {
+        $object_name = "Pimcore\\Model\\Object\\" . ucfirst($this->_getParam("source_classname"));
+      } else {
+        $object_name = "Object_" . ucfirst($this->_getParam("source_classname"));
+      }
 
       $children = $folder->getChilds();
 
