@@ -25,27 +25,6 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
         this.mode = 'remote';
 
         this.fieldConfig.index = 15005;
-
-        remote_data = null;
-        jQuery.ajax({
-            url: "/plugin/DynamicDropdown/dynamicdropdown/options",
-            async: false,
-            dataType: "json",
-            type: "GET",
-            data: {
-                source_parent: layoutConf.source_parentid,
-                source_methodname: layoutConf.source_methodname,
-                source_classname: layoutConf.source_classname,
-                source_recursive: layoutConf.source_recursive,
-                current_language: pimcore.settings.language,
-                sort_by: layoutConf.sort_by
-            },
-            success: function(data) {
-                remote_data = data;
-            }
-        });
-        this.fieldConfig.options = remote_data;			 
-				
     },
 
     getGridColumnEditor:function (field) {
@@ -54,7 +33,70 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
 
     getGridColumnFilter:function (field) {
         return null;
-    }
+    },
+    
+    getLayoutEdit: function () {
+        // generate store
+        options_store = new Ext.data.Store({
+            proxy: new Ext.data.HttpProxy({
+                url: '/plugin/DynamicDropdown/dynamicdropdown/options'
+            }),
+            baseParams: {
+                source_parent: this.fieldConfig.source_parentid,
+                source_methodname: this.fieldConfig.source_methodname,
+                source_classname: this.fieldConfig.source_classname,
+                source_recursive: this.fieldConfig.source_recursive,
+                current_language: pimcore.settings.language,
+                sort_by: this.fieldConfig.sort_by
+            },
+            autoLoad: true,
+            loading: true,
+            reader: new Ext.data.JsonReader({
+                //root: 'data'
+            }, [{name: 'value'}, {name: 'key'}]),
+            listeners: {
+                "load": function(store) {
+                    console.log(this);
+                    this.component.setValue(this.data);
+                }.bind(this)
+            }
+        });
+
+        var options = {
+            name: this.fieldConfig.name,
+            triggerAction: "all",
+            editable: true,
+            typeAhead: true,
+            forceSelection: true,
+            selectOnFocus: true,
+            fieldLabel: this.fieldConfig.title,
+            store: options_store,
+            itemCls: "object_field",
+            width: 300,
+            displayField: "key",
+            valueField: "value",
+            mode: "local",
+            autoSelect: true
+        };
+
+        if (this.fieldConfig.width) {
+            options.width = this.fieldConfig.width;
+        }
+
+        // TODO
+        //if (typeof this.data == "string" || typeof this.data == "number") {
+        //    if (in_array(this.data, validValues)) {
+        //        options.value = this.data;
+        //    } else {
+        //        options.value = "";
+        //    }
+        //} else {
+        //    options.value = "";
+        //}
+
+        this.component = new Ext.form.ComboBox(options);
+        return this.component;
+    }    
 
 //    getGridColumnEditor: function(field) {
 //        var store = new Ext.data.JsonStore({
