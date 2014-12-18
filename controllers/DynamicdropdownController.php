@@ -70,7 +70,7 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 
       $children = $folder->getChilds();
 
-      $usesI18n = $this->isUsingI18n($children, $source);
+      $usesI18n = $this->isUsingI18n($children[0], $source);
       $current_lang = $this->_getParam("current_language");
 
       if (!Pimcore_Tool::isValidLanguage($current_lang)) {
@@ -124,8 +124,8 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 		$this->_helper->json($methods);
 	}
 	
-	private function isUsingI18n($class, $method) {
-		$modelId = $class->classId;
+	private function isUsingI18n($object, $method) {
+		$modelId = $object->o_classId;
 		
 		// Stolen from Object_Class_Resource - it's protected there.
 		$file = PIMCORE_CLASS_DIRECTORY."/definition_".$modelId.".psf";
