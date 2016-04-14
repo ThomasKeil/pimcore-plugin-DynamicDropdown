@@ -67,7 +67,7 @@ class Object_Class_Data_DynamicDropdown extends Object_Class_Data_Href {
   }
 
 		
-    public function getDataForEditmode($data, $object = null) {
+    public function getDataForEditmode($data, $object = null, $params = array()) {
 			if ($data) return $data->getId();
 			return;
 		}
@@ -85,8 +85,8 @@ class Object_Class_Data_DynamicDropdown extends Object_Class_Data_Href {
      * @param null|Object_Abstract $object
      * @return Asset|Document|Object_Abstract
      */
-    public function getDataFromEditmode($data, $object = null) {
-				return Element_Service::getElementById("object", $data);
+    public function getDataFromEditmode($data, $object = null, $params = array()) {
+        return Element_Service::getElementById("object", $data);
     }
 		
 }
