@@ -18,16 +18,16 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
 
     type: "dynamicDropdown",
     allowIndex: true,
-		
+
     /**
-      * define where this datatype is allowed
-      */
+     * define where this datatype is allowed
+     */
     allowIn: {
         object: true,
         objectbrick: true,
         fieldcollection: true,
         localizedfield: true
-    },		
+    },
 
     initialize: function (treeNode, initData) {
         this.type = "dynamicDropdown";
@@ -35,7 +35,6 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
         this.initData(initData);
 
         this.treeNode = treeNode;
-        this.id = this.type + "_" + treeNode.attributes.id;
     },
 
     getTypeName: function () {
@@ -65,56 +64,56 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
         ]);
 
         this.specificPanel.add([
-        {
-            xtype: "textfield",
-            fieldLabel: t("parentid"),
-            name: "source_parentid",
-            cls: "input_drop_target",
-            value: this.datax.source_parentid,
-            listeners: {
-                "render": function (el) {
-                    new Ext.dd.DropZone(el.getEl(), {
-                        reference: this,
-                        ddGroup: "element",
-                        getTargetFromEvent: function(e) {
-                            return this.getEl();
-                        }.bind(el),
+            {
+                xtype: "textfield",
+                fieldLabel: t("parentid"),
+                name: "source_parentid",
+                cls: "input_drop_target",
+                value: this.datax.source_parentid,
+                listeners: {
+                    "render": function (el) {
+                        new Ext.dd.DropZone(el.getEl(), {
+                            reference: this,
+                            ddGroup: "element",
+                            getTargetFromEvent: function(e) {
+                                return this.getEl();
+                            }.bind(el),
 
-                        onNodeOver : function(target, dd, e, data) {
-                            if (data.node.attributes.type == "folder") {
-                                return Ext.dd.DropZone.prototype.dropAllowed;
-                            }
-                            return Ext.dd.DropZone.prototype.dropNotAllowed;
-                        },
+                            onNodeOver : function(target, dd, e, data) {
+                                if (data.node.attributes.type == "folder") {
+                                    return Ext.dd.DropZone.prototype.dropAllowed;
+                                }
+                                return Ext.dd.DropZone.prototype.dropNotAllowed;
+                            },
 
-                        onNodeDrop : function (target, dd, e, data) {
-                            if (data.node.attributes.type == "folder") {
-                                this.setValue(data.node.attributes.path);
-                                return true;
-                            }
-                            return false;
-                        }.bind(el)
-                    });
+                            onNodeDrop : function (target, dd, e, data) {
+                                if (data.node.attributes.type == "folder") {
+                                    this.setValue(data.node.attributes.path);
+                                    return true;
+                                }
+                                return false;
+                            }.bind(el)
+                        });
+                    }
                 }
+
             }
-								
-        }
         ]);
 
-        var source_recursive = this.specificPanel.add([{
+        this.specificPanel.add([{
             xtype: "checkbox",
             fieldLabel: t("recursive"),
             name: "source_recursive",
-//            id: "source_recursive",
+            id: "source_recursive",
             checked: this.datax.source_recursive
         }]);
 
-        var sortby_combobox = this.specificPanel.add([
+        this.specificPanel.add([
             {
                 xtype: "combo",
                 fieldLabel: t("Sort by"),
                 name: "sort_by",
-//                id: "sortby",
+                id: "sortby",
                 listWidth: 'auto',
                 triggerAction: 'all',
                 editable: false,
@@ -123,18 +122,20 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             }
         ]);
 
-        var classname_combobox = this.specificPanel.add([
+        this.specificPanel.add([
         {
             xtype: "combo",
             fieldLabel: t("allowed_classes"),
             name: "source_classname",
-            id: this.id + "_classname",
-            method_id: this.id + "_methodnames",
+            id: "classname",
             listWidth: 'auto',
             triggerAction: 'all',
             editable: false,
             store: new Ext.data.JsonStore({
-                url: '/admin/class/get-tree',
+                proxy: {
+                    type: 'ajax',
+                    url: '/admin/class/get-tree'
+                },
                 fields: ["text","id"]
             }),
             displayField: "text",
@@ -145,62 +146,54 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             listeners: {
                 expand: {
                     fn:function(combo, value) {
-                        var methodnames = Ext.getCmp(this.method_id);
+                        var methodnames = Ext.getCmp("methodnames");
                         methodnames.disable();
                     }
                 },
                 collapse: {
                     fn:function(combo, value) {
-                        var methodnames = Ext.getCmp(this.method_id);
-
-                        var loadDone = function(store, records, options) {
-                            store.un("load", loadDone);
-                            methodnames.render();
-                            methodnames.enable();
-
-                        }
-
-                        methodnames.store.on("load", loadDone);
-                        methodnames.store.reload({
-                            params: {
-                                classname: combo.getValue()
-                            }
-                        });
-                        methodnames.store.baseParams.classname = combo.getValue();
+                        var methodnames = Ext.getCmp("methodnames");
                         methodnames.setValue("");
-                    }
+                        this.reloadMethodsCombo();
+                    }.bind(this)
                 }
-
-
             }
-        }
-        ]);
+        }]);
         this.specificPanel.add([
         {
             xtype: "combo",
             fieldLabel: t("methodname"),
             name: "source_methodname",
-            id: this.id + "_methodnames",
+            id: "methodnames",
             listWidth: 'auto',
             triggerAction: 'all',
             editable: false,
             store: new Ext.data.JsonStore({
-                url: '/plugin/DynamicDropdown/dynamicdropdown/methods',
-                fields: ["key","value"],
-                baseParams: {
-                    classname: Ext.getCmp(this.id + "_classname").getValue()
-                    }
+                fields: ["key","value"]
             }),
             displayField: "value",
             valueField: "key",
             summaryDisplay:true,
             value: this.datax.source_methodname
-        }
-
-
-        ]);
+        }]);
+        var methodnames = Ext.getCmp("methodnames");
+        this.reloadMethodsCombo();
+        var loadDone = function(store, records, options) {
+            methodnames.enable();
+        }.bind(this);
+        methodnames.getStore().on("load", loadDone);
 
         return this.layout;
+    },
+    reloadMethodsCombo: function() {
+        var methodnames = Ext.getCmp("methodnames");
+        //
+        methodnames.getStore().reload({
+            url: '/plugin/DynamicDropdown/dynamicdropdown/methods',
+            params: {
+                classname: Ext.getCmp("classname").getValue()
+            }
+        });
     },
     isValid: function ($super) {
         var data = this.getData();
@@ -209,3 +202,4 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
         return $super();
     }
 });
+

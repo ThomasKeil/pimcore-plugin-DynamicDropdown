@@ -114,7 +114,7 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 		$filter = new Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9_\-]@", "replace" => ""));
 		$class_name = $filter->filter($this->_getParam("classname"));
 		if (!empty($class_name)) {
-			$class_methods = get_class_methods("Object_".ucfirst($class_name));
+			$$class_methods = $this->get_this_class_methods('\Pimcore\Model\Object\\'.ucfirst($class_name));
 			if (!is_null($class_methods)) {
 				foreach ($class_methods as $method_name) {
 					if (substr($method_name, 0, 3) == "get") $methods[] = array("value" => $method_name, "key" => $method_name);
@@ -123,6 +123,17 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 		}
 		$this->_helper->json($methods);
 	}
+
+    private function get_this_class_methods($class){
+        $array1 = get_class_methods($class);
+        if ($parent_class = get_parent_class($class)) {
+            $array2 = get_class_methods($parent_class);
+            $array3 = array_diff($array1, $array2);
+        } else {
+            $array3 = $array1;
+        }
+        return $array3;
+    }
 	
 	private function isUsingI18n($class, $method) {
 		$modelId = $class->classId;

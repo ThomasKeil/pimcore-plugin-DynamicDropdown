@@ -1,4 +1,4 @@
-.Dynamicdropdown_icon_element{
+.Dynamicdropdown_icon_element,.pimcore_icon_dynamicDropdown{
     background: url(/plugins/DynamicDropdown/static/img/dynamicdropdown-logo.png) left center no-repeat !important;
 }
 .itemselector_icon_element {

@@ -11,7 +11,7 @@
  * @author     Thomas Keil <thomas@weblizards.de>
  * @license    http://www.pimcore.org/license     New BSD License
  */
-class Object_Class_Data_DynamicDropdown extends Object_Class_Data_Href {
+class Object_Class_Data_DynamicDropdown extends \Pimcore\Model\Object\ClassDefinition\Data\Href
 	
     /**
      * Static type of this element

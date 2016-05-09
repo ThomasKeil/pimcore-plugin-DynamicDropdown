@@ -11,7 +11,7 @@
  * @license    http://www.pimcore.org/license     New BSD License
  */
 
-class Dynamicdropdown_AdminController extends Pimcore_Controller_Action_Admin {
+class Dynamicdropdown_AdminController extends Pimcore\Controller\Action\Admin {
     
 	public function settingsAction() {
 		
