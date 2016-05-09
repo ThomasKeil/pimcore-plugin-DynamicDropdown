@@ -34,21 +34,21 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
     getGridColumnFilter:function (field) {
         return null;
     },
-    
+
     getLayoutEdit: function () {
         // generate store
         options_store = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
-                url: '/plugin/DynamicDropdown/dynamicdropdown/options'
+                url: '/plugin/DynamicDropdown/dynamicdropdown/options',
+                extraParams: {
+                    source_parent: this.fieldConfig.source_parentid,
+                    source_methodname: this.fieldConfig.source_methodname,
+                    source_classname: this.fieldConfig.source_classname,
+                    source_recursive: this.fieldConfig.source_recursive,
+                    current_language: pimcore.settings.language,
+                    sort_by: this.fieldConfig.sort_by
+                }
             }),
-            baseParams: {
-                source_parent: this.fieldConfig.source_parentid,
-                source_methodname: this.fieldConfig.source_methodname,
-                source_classname: this.fieldConfig.source_classname,
-                source_recursive: this.fieldConfig.source_recursive,
-                current_language: pimcore.settings.language,
-                sort_by: this.fieldConfig.sort_by
-            },
             autoLoad: true,
             loading: true,
             reader: new Ext.data.JsonReader({
@@ -96,7 +96,7 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
 
         this.component = new Ext.form.ComboBox(options);
         return this.component;
-    }    
+    }
 
 //    getGridColumnEditor: function(field) {
 //        var store = new Ext.data.JsonStore({
@@ -169,3 +169,4 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
 //        };
 //      }
 });
+
