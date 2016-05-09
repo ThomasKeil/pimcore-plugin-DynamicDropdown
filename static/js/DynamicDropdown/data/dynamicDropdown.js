@@ -18,16 +18,16 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
 
     type: "dynamicDropdown",
     allowIndex: true,
-		
+
     /**
-      * define where this datatype is allowed
-      */
+     * define where this datatype is allowed
+     */
     allowIn: {
         object: true,
         objectbrick: true,
         fieldcollection: true,
         localizedfield: true
-    },		
+    },
 
     initialize: function (treeNode, initData) {
         this.type = "dynamicDropdown";
@@ -35,7 +35,7 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
         this.initData(initData);
 
         this.treeNode = treeNode;
-        this.id = this.type + "_" + treeNode.attributes.id;
+        this.id = this.type + "_" + treeNode.id;
     },
 
     getTypeName: function () {
@@ -97,7 +97,7 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
                     });
                 }
             }
-								
+
         }
         ]);
 
@@ -134,7 +134,10 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             triggerAction: 'all',
             editable: false,
             store: new Ext.data.JsonStore({
-                url: '/admin/class/get-tree',
+                proxy: {
+                    type: 'ajax',
+                    url: '/admin/class/get-tree'
+                },
                 fields: ["text","id"]
             }),
             displayField: "text",
@@ -145,30 +148,16 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             listeners: {
                 expand: {
                     fn:function(combo, value) {
-                        var methodnames = Ext.getCmp(this.method_id);
+                        var methodnames = Ext.getCmp(this.id + "_methodnames");
                         methodnames.disable();
-                    }
+                    }.bind(this)
                 },
                 collapse: {
                     fn:function(combo, value) {
-                        var methodnames = Ext.getCmp(this.method_id);
-
-                        var loadDone = function(store, records, options) {
-                            store.un("load", loadDone);
-                            methodnames.render();
-                            methodnames.enable();
-
-                        }
-
-                        methodnames.store.on("load", loadDone);
-                        methodnames.store.reload({
-                            params: {
-                                classname: combo.getValue()
-                            }
-                        });
-                        methodnames.store.baseParams.classname = combo.getValue();
+                        var methodnames = Ext.getCmp(this.id + "_methodnames");
                         methodnames.setValue("");
-                    }
+                        this.reloadMethodsCombo(methodnames);
+                    }.bind(this)
                 }
 
 
@@ -185,11 +174,7 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             triggerAction: 'all',
             editable: false,
             store: new Ext.data.JsonStore({
-                url: '/plugin/DynamicDropdown/dynamicdropdown/methods',
-                fields: ["key","value"],
-                baseParams: {
-                    classname: Ext.getCmp(this.id + "_classname").getValue()
-                    }
+                fields: ["key","value"]
             }),
             displayField: "value",
             valueField: "key",
@@ -199,8 +184,22 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
 
 
         ]);
+        var methodnames = Ext.getCmp(this.id + "_methodnames");
+        this.reloadMethodsCombo(methodnames);
+        var loadDone = function(store, records, options) {
+            methodnames.enable();
+        }.bind(this);
+        methodnames.getStore().on("load", loadDone);
 
         return this.layout;
+    },
+    reloadMethodsCombo: function(methodnames) {
+        methodnames.getStore().reload({
+            url: '/plugin/DynamicDropdown/dynamicdropdown/methods',
+            params: {
+                classname: Ext.getCmp(this.id + "_classname").getValue()
+            }
+        });
     },
     isValid: function ($super) {
         var data = this.getData();
@@ -209,3 +208,4 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
         return $super();
     }
 });
+

@@ -12,7 +12,7 @@
  * @author     Thomas Akkermans <thomas.akkermans@amgate.com>
  * @license    http://www.pimcore.org/license     New BSD License
  */
-class Object_Class_Data_DynamicDropdownMultiple extends Object_Class_Data_Multiselect
+class Object_Class_Data_DynamicDropdownMultiple extends Pimcore\Model\Object\ClassDefinition\Data\Multiselect
 {
     /**
      * Static type of this element
