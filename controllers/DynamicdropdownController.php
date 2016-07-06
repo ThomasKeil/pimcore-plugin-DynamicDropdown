@@ -56,23 +56,32 @@ class Dynamicdropdown_DynamicdropdownController extends Action {
 		$this->_helper->json($options);
 	}
 
+  /**
+   * @param Object\AbstractObject $folder
+   * @param array $options
+   * @param string $path
+   * @return array
+   */
   private function walk_path(Object\AbstractObject $folder, $options = null, $path = "") {
     if (is_null($options)) $options = array();
 
     if ($folder) {
-      $source = $this->_getParam("source_methodname");
+      $source = $this->getParam("source_methodname");
       
       $object_name = "Pimcore\\Model\\Object\\" . ucfirst($this->_getParam("source_classname"));
 
+      $usesI18n = false;
       $children = $folder->getChilds();
-
-      $usesI18n = $this->isUsingI18n($children, $source);
-      $current_lang = $this->_getParam("current_language");
+      if (is_array($children)) {
+        $usesI18n = $this->isUsingI18n($children[0], $source);
+      }
+      $current_lang = $this->getParam("current_language");
 
       if (!Pimcore\Tool::isValidLanguage($current_lang)) {
         $languages = Pimcore\Tool::getValidLanguages();
         $current_lang = $languages[0]; // TODO: Is this sensible?
       }
+
       foreach ($children as $child) {
         /** @var Object\Concrete $child */
         $class = get_class($child);
@@ -112,7 +121,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action {
 		$filter = new \Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9_\-]@", "replace" => ""));
 		$class_name = $filter->filter($this->getParam("classname"));
 		if (!empty($class_name)) {
-			$class_methods = get_class_methods("Object_".ucfirst($class_name));
+			$class_methods = $this->get_this_class_methods("\\Pimcore\\Model\\Object\\".ucfirst($class_name));
 			if (!is_null($class_methods)) {
 				foreach ($class_methods as $method_name) {
 					if (substr($method_name, 0, 3) == "get") $methods[] = array("value" => $method_name, "key" => $method_name);
@@ -121,21 +130,42 @@ class Dynamicdropdown_DynamicdropdownController extends Action {
 		}
 		$this->_helper->json($methods);
 	}
-	
-	private function isUsingI18n($class, $method) {
-		$modelId = $class->classId;
-		
+
+  /**
+   * @param $class
+   * @return array
+   * @author Dominik Schnieper https://github.com/dominikschnieper
+   */
+  private function get_this_class_methods($class) {
+    $class_methods = get_class_methods($class);
+    if ($parent_class = get_parent_class($class)) {
+      $parent_class_methods = get_class_methods($parent_class);
+      return array_diff($class_methods, $parent_class_methods);
+    }
+    return $class_methods;
+  }
+
+  /**
+   * @param Object\Concrete $object
+   * @param $method
+   * @return bool
+   */
+	private function isUsingI18n(Object\Concrete $object, $method) {
 		// Stolen from Object_Class_Resource - it's protected there.
-		$file = PIMCORE_CLASS_DIRECTORY."/definition_".$modelId.".psf";
+		$file = PIMCORE_CLASS_DIRECTORY."/definition_".$object->getClassId().".psf";
 		if(!is_file($file)) {
 				return false;
 		}
 		$tree = unserialize(file_get_contents($file));
 		$definition = $this->parse_tree($tree, array());
 		return $definition[$method];
-		
 	}
-	
+
+  /**
+   * @param $tree
+   * @param $definition
+   * @return mixed
+   */
 	private function parse_tree($tree, $definition) {
 		if ($tree instanceof Object\ClassDefinition\Layout || $tree instanceof Object\ClassDefinition\Data\Localizedfields) { // Did I forget something?
 			$children = $tree->getChilds();
