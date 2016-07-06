@@ -1,14 +1,9 @@
 /**
- * This source file is subject to the new BSD license that is 
- * available through the world-wide-web at this URL:
- * http://www.pimcore.org/license
- *
  * @category   Pimcore
- * @package    Object_Class
- * @copyright  Copyright (c) 2011 Weblizards GbR (http://www.weblizards.de)
+ * @copyright  Copyright (c) 2016 Weblizards GmbH (http://www.weblizards.de)
  * @author     Thomas Keil <thomas@weblizards.de>
  * @author     Thomas Akkermans <thomas.akkermans@amgate.com>
- * @license    http://www.pimcore.org/license     New BSD License
+ * @license    GPLv3
  */
 
 pimcore.registerNS("pimcore.object.tags.dynamicDropdownMultiple");
@@ -16,34 +11,61 @@ pimcore.object.tags.dynamicDropdownMultiple = Class.create(pimcore.object.tags.m
 
     type: "dynamicDropdownMultiple",
 
-    initialize: function (data, fieldConfig) {
-
-        this.data = data;
-        this.fieldConfig = fieldConfig;
-//        this.fieldConfig.width = 250;
-        this.mode = 'remote';
-
-        this.fieldConfig.index = 15006;
-
-        remote_data = null;
-        jQuery.ajax({
-            url: "/plugin/DynamicDropdown/dynamicdropdown/options",
-            async: false,
-            dataType: "json",
-            type: "GET",
-            data: {
-                source_parent: fieldConfig.source_parentid,
-                source_methodname: fieldConfig.source_methodname,
-                source_classname: fieldConfig.source_classname,
-                source_recursive: fieldConfig.source_recursive,
-                current_language: pimcore.settings.language
+    getLayoutEdit: function () {
+        this.options_store = new Ext.data.JsonStore({
+            proxy: {
+                type: 'ajax',
+                url: '/plugin/DynamicDropdown/dynamicdropdown/options',
+                extraParams: {
+                    source_parent: this.fieldConfig.source_parentid,
+                    source_methodname: this.fieldConfig.source_methodname,
+                    source_classname: this.fieldConfig.source_classname,
+                    source_recursive: this.fieldConfig.source_recursive,
+                    current_language: pimcore.settings.language,
+                    sort_by: this.fieldConfig.sort_by
+                }
             },
-            success: function(data) {
-                remote_data = data;
-            }
+            fields: ["key", "value"],
+            listeners: {
+                "load": function(/* store */) {
+                    this.component.setValue(this.data);
+                }.bind(this)
+            },
+            autoLoad: true
         });
-        
-        this.fieldConfig.options = remote_data;			 
+
+
+        var options = {
+            name: this.fieldConfig.name,
+            triggerAction: "all",
+            editable: false,
+            fieldLabel: this.fieldConfig.title,
+            store: this.options_store,
+            componentCls: "object_field",
+            height: 100,
+            displayField: "key",
+            valueField: "value",
+            labelWidth: this.fieldConfig.labelWidth ? this.fieldConfig.labelWidth : 100
+        };
+
+        options.width = 300;
+        if (this.fieldConfig.width) {
+            options.width = this.fieldConfig.width;
+        }
+
+        options.width += options.labelWidth;
+
+        if (this.fieldConfig.height) {
+            options.height = this.fieldConfig.height;
+        }
+
+        if (typeof this.data == "string" || typeof this.data == "number") {
+            options.value = this.data;
+        }
+
+        this.component = Ext.create('Ext.ux.form.MultiSelect', options);
+
+        return this.component;
     },
 
     getGridColumnEditor:function (field) {

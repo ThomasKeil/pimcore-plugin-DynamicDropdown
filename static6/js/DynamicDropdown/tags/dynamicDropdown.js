@@ -17,7 +17,7 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
     getGridColumnFilter:function (field) {
         return null;
     },
-    
+
     getLayoutEdit: function () {
 
         this.options_store = new Ext.data.JsonStore({

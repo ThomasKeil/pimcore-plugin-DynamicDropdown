@@ -40,7 +40,10 @@
 
         <pluginJsPaths-extjs6>
             <path>/DynamicDropdown/static6/js/DynamicDropdown/data/dynamicDropdown.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/data/dynamicDropdownMultiple.js</path>
+
             <path>/DynamicDropdown/static6/js/DynamicDropdown/tags/dynamicDropdown.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/tags/dynamicDropdownMultiple.js</path>
         </pluginJsPaths-extjs6>
         <pluginCssPaths-extjs6>
             <path>/DynamicDropdown/static6/css/admin.css</path>
