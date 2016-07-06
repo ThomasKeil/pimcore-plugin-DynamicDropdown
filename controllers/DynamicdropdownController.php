@@ -73,7 +73,12 @@ class Dynamicdropdown_DynamicdropdownController extends Action {
       $usesI18n = false;
       $children = $folder->getChilds();
       if (is_array($children)) {
-        $usesI18n = $this->isUsingI18n($children[0], $source);
+        foreach ($children as $i18n_probe_child) {
+          if ($i18n_probe_child instanceof Object\Concrete) {
+            $usesI18n = $this->isUsingI18n($i18n_probe_child, $source);
+            break;
+          }
+        }
       }
       $current_lang = $this->getParam("current_language");
 
