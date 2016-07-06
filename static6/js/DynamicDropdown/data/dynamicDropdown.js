@@ -79,9 +79,7 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             listeners: {
                 collapse: {
                     fn: function(combo/*, value*/) {
-                        var store = this.methodsCombo.store;
-                        store.baseParams.classname = combo.getValue();
-                        store.reload({
+                        this.methodsCombo.store.reload({
                             params: {
                                 classname: combo.getValue()
                             }
