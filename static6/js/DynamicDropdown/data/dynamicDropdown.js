@@ -99,16 +99,17 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
                 url: '/plugin/DynamicDropdown/dynamicdropdown/methods'
             },
             fields: ["key", "value"],
-            baseParams: {
+        });
+
+        this.methodsStore.load({
+            params: {
                 classname: this.classesCombo.getValue()
-            },
-            autoLoad: true
+            }
         });
 
         this.methodsCombo = new Ext.form.ComboBox({
             fieldLabel: t("methodname"),
             name: "source_methodname",
-            id: this.id + "_methodnames",
             listWidth: 'auto',
             triggerAction: 'all',
             editable: false,
