@@ -23,25 +23,23 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
         this.options_store = new Ext.data.JsonStore({
             proxy: {
                 type: 'ajax',
-                url: '/plugin/DynamicDropdown/dynamicdropdown/options'
+                url: '/plugin/DynamicDropdown/dynamicdropdown/options',
+                extraParams: {
+                    source_parent: this.fieldConfig.source_parentid,
+                    source_methodname: this.fieldConfig.source_methodname,
+                    source_classname: this.fieldConfig.source_classname,
+                    source_recursive: this.fieldConfig.source_recursive,
+                    current_language: pimcore.settings.language,
+                    sort_by: this.fieldConfig.sort_by
+                }
             },
             fields: ["key", "value"],
             listeners: {
                 "load": function(/* store */) {
                     this.component.setValue(this.data);
                 }.bind(this)
-            }
-        });
-
-        this.options_store.load({
-            params: {
-                source_parent: this.fieldConfig.source_parentid,
-                source_methodname: this.fieldConfig.source_methodname,
-                source_classname: this.fieldConfig.source_classname,
-                source_recursive: this.fieldConfig.source_recursive,
-                current_language: pimcore.settings.language,
-                sort_by: this.fieldConfig.sort_by
-            }
+            },
+            autoLoad: true
         });
 
         var options = {
