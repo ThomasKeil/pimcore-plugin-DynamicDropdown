@@ -1,18 +1,17 @@
 <?php
 
 /**
- * This source file is subject to the new BSD license that is 
- * available through the world-wide-web at this URL:
- * http://www.pimcore.org/license
  *
  * @category   Pimcore
- * @package    Object_Class
- * @copyright  Copyright (c) 2011 Weblizards GbR (http://www.weblizards.de)
+ * @copyright  Copyright (c) Weblizards GmbH (http://www.weblizards.de)
  * @author     Thomas Keil <thomas@weblizards.de>
- * @license    http://www.pimcore.org/license     New BSD License
+ * @license    GPLv3
  */
 
-class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Action {
+use Pimcore\Controller\Action;
+use Pimcore\Model\Object;
+
+class Dynamicdropdown_DynamicdropdownController extends Action {
 
   private $separator = " - ";
 
@@ -22,8 +21,8 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 	 */
 	public function optionsAction() {
 
-		$filter = new Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9/\-_]@", "replace" => ""));
-		$parentFolderPath = $filter->filter($this->_getParam("source_parent"));
+		$filter = new \Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9/\-_]@", "replace" => ""));
+		$parentFolderPath = $filter->filter($this->getParam("source_parent"));
 		
 		
 		if ($parentFolderPath) {
@@ -35,7 +34,8 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 			// correct wrong path (root-node problem)
 			$parentFolderPath = str_replace("//","/",$parentFolderPath);
 			
-			$folder = Object_Folder::getByPath($parentFolderPath);
+			$folder = Object\Folder::getByPath($parentFolderPath);
+
       if ($folder) {
         $options = $this->walk_path($folder);
 			} else {
@@ -45,7 +45,7 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 			Logger::warning("The folder submitted for source_parent is not valid: \"".$this->_getParam("source_parent")."\"");
 		}
 
-    $sort = $this->_getParam("sort_by");
+    $sort = $this->getParam("sort_by");
     usort($options, function($a, $b) use ($sort) {
       $field = "id";
       if ($sort == "byvalue") $field = "key";
@@ -56,37 +56,34 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 		$this->_helper->json($options);
 	}
 
-  private function walk_path($folder, $options = null, $path = "") {
+  private function walk_path(Object\AbstractObject $folder, $options = null, $path = "") {
     if (is_null($options)) $options = array();
-    if ($folder) {
 
+    if ($folder) {
       $source = $this->_getParam("source_methodname");
       
-      if (Pimcore_Version::getRevision() > 3303) {
-        $object_name = "Pimcore\\Model\\Object\\" . ucfirst($this->_getParam("source_classname"));
-      } else {
-        $object_name = "Object_" . ucfirst($this->_getParam("source_classname"));
-      }
+      $object_name = "Pimcore\\Model\\Object\\" . ucfirst($this->_getParam("source_classname"));
 
       $children = $folder->getChilds();
 
       $usesI18n = $this->isUsingI18n($children, $source);
       $current_lang = $this->_getParam("current_language");
 
-      if (!Pimcore_Tool::isValidLanguage($current_lang)) {
-        $languages = Pimcore_Tool::getValidLanguages();
+      if (!Pimcore\Tool::isValidLanguage($current_lang)) {
+        $languages = Pimcore\Tool::getValidLanguages();
         $current_lang = $languages[0]; // TODO: Is this sensible?
       }
       foreach ($children as $child) {
+        /** @var Object\Concrete $child */
         $class = get_class($child);
         switch ($class) {
-          case "Object_Folder":
+          case "\\Pimcore\\Model\\Object\\Folder":
             /**
-             * @var Object_Folder $child
+             * @var Object\Folder $child
              */
 
             $key = $child->getProperty("Taglabel") != "" ? $child->getProperty("Taglabel") : $child->getKey();
-            if ($this->_getParam("source_recursive") == "true")
+            if ($this->getParam("source_recursive") == "true")
               $options = $this->walk_path($child, $options, $path.$this->separator.$key);
             break;
           case $object_name:
@@ -95,12 +92,13 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
               "value" => $child->getId(),
               "key" => ltrim($path.$this->separator.$key, $this->separator)
             );
-            if ($this->_getParam("source_recursive") == "true")
+            if ($this->getParam("source_recursive") == "true")
               $options = $this->walk_path($child, $options, $path.$this->separator.$key);
             break;
         }
       }
     }
+
     return $options;
   }
 	
@@ -111,8 +109,8 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 	public function methodsAction() {
 		$methods = array();
 		
-		$filter = new Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9_\-]@", "replace" => ""));
-		$class_name = $filter->filter($this->_getParam("classname"));
+		$filter = new \Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9_\-]@", "replace" => ""));
+		$class_name = $filter->filter($this->getParam("classname"));
 		if (!empty($class_name)) {
 			$class_methods = get_class_methods("Object_".ucfirst($class_name));
 			if (!is_null($class_methods)) {
@@ -139,8 +137,7 @@ class Dynamicdropdown_DynamicdropdownController extends Pimcore_Controller_Actio
 	}
 	
 	private function parse_tree($tree, $definition) {
-		$class = get_class($tree);
-		if (is_a($tree, "Object_Class_Layout") || is_a($tree, "Object_Class_Data_Localizedfields")) { // Did I forget something?
+		if ($tree instanceof Object\ClassDefinition\Layout || $tree instanceof Object\ClassDefinition\Data\Localizedfields) { // Did I forget something?
 			$children = $tree->getChilds();
 			foreach ($children as $child) {
 				$definition["get".ucfirst($child->name)] = $tree->fieldtype == "localizedfields";
