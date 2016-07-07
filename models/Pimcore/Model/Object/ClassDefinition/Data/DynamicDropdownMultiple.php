@@ -1,18 +1,16 @@
 <?php
 
+namespace Pimcore\Model\Object\ClassDefinition\Data;
+
 /**
- * This source file is subject to the new BSD license that is 
- * available through the world-wide-web at this URL:
- * http://www.pimcore.org/license
- *
  * @category   Pimcore
- * @package    Object_Class
- * @copyright  Copyright (c) 2011 Weblizards GbR (http://www.weblizards.de)
+ * @package    Object\ClassDefinition\Data
+ * @copyright  Copyright (c) 2016 Weblizards GmbH (http://www.weblizards.de)
  * @author     Thomas Keil <thomas@weblizards.de>
  * @author     Thomas Akkermans <thomas.akkermans@amgate.com>
- * @license    http://www.pimcore.org/license     New BSD License
+ * @license    GPLv3
  */
-class Object_Class_Data_DynamicDropdownMultiple extends Object_Class_Data_Multiselect
+class DynamicDropdownMultiple extends Multiselect
 {
     /**
      * Static type of this element
@@ -20,9 +18,12 @@ class Object_Class_Data_DynamicDropdownMultiple extends Object_Class_Data_Multis
      * @var string
      */
     public $fieldtype = "dynamicDropdownMultiple";
+
     public $source_parentid;
     public $source_classname;
     public $source_methodname;
+    public $source_recursive;
+    public $sort_by;
 
     public function setsource_parentid($id)
     {
@@ -62,11 +63,22 @@ class Object_Class_Data_DynamicDropdownMultiple extends Object_Class_Data_Multis
       return $this->source_recursive;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getObjectsAllowed()
+    public function setsort_by($sort_by)
     {
-        return array("Object_" . ucfirst($this->source_classname));
+        $this->sort_by = $sort_by;
     }
+
+    public function getsort_by()
+    {
+        return $this->sort_by;
+    }
+
+// TODO Delete this if there are no errors... is this obsolete?
+//    /**
+//     * @return boolean
+//     */
+//    public function getObjectsAllowed()
+//    {
+//        return array("Object_" . ucfirst($this->source_classname));
+//    }
 }

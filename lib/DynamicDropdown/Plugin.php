@@ -67,4 +67,8 @@ class Plugin extends AbstractPlugin implements PluginInterface {
         return "/DynamicDropdown/texts/en.csv";
         
     }
+
+    public function preDispatch() {
+//        class_alias("\\Object\\ClassDefinition\\Data\\DynamicDropdown", "Object_Class_Data_DynamicDropdown");
+    }
 }

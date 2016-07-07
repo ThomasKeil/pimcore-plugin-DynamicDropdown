@@ -1,14 +1,14 @@
 <?php 
 
-//namespace Pimcore\Model\Object\ClassDefinition\Data;
-namespace Object\ClassDefinition\Data;
-
-use Pimcore\Model\Object\ClassDefinition\Data\Href;
-use Pimcore\Model\Element\Service;
+namespace Pimcore\Model\Object\ClassDefinition\Data;
+use Pimcore\Model\Asset;
+use Pimcore\Model\Document;
+use Pimcore\Model\Object\Service;
+use Pimcore\Model\Object\AbstractObject;
 
 /**
  * @category   Pimcore
- * @package    Object\Class\Data
+ * @package    Object\ClassDefinition\Data
  * @copyright  Copyright (c) Weblizards GmbH (http://www.weblizards.de)
  * @author     Thomas Keil <thomas@weblizards.de>
  * @license    GPLv3
@@ -80,11 +80,23 @@ class DynamicDropdown extends Href
     }
 
 
-//    public function getDataForEditmode($data, $object = null, $params = array())
-//    {
-//        if ($data) return $data->getId();
-//    return;
-//    }
+    public function getDataForEditmode($data, $object = null, $params = array())
+    {
+        if ($data) return $data->getId();
+        return null;
+    }
+
+    /**
+     * @see Data::getDataFromEditmode
+     * @param int $data
+     * @param null|AbstractObject $object
+     * @return Asset|Document|AbstractObject
+     */
+    public function getDataFromEditmode($data, $object = null, $params = array())
+    {
+        return Service::getElementById("object", $data);
+    }
+
 //
 //    /**
 //     * @return boolean
@@ -94,14 +106,4 @@ class DynamicDropdown extends Href
 //        return array("Object_".ucfirst($this->source_classname));
 //    }
 //
-//    /**
-//     * @see Data::getDataFromEditmode
-//     * @param array $data
-//     * @param null|Object_Abstract $object
-//     * @return Asset|Document|Object_Abstract
-//     */
-//    public function getDataFromEditmode($data, $object = null, $params = array())
-//    {
-//        return Service::getElementById("object", $data);
-//    }
 }

@@ -1,26 +1,25 @@
 <?php
 
+namespace Pimcore\Model\Object\ClassDefinition\Data;
+
 /**
- * This source file is subject to the new BSD license that is 
- * available through the world-wide-web at this URL:
- * http://www.pimcore.org/license
- *
  * @category   Pimcore
- * @package    Object_Class
- * @copyright  Copyright (c) 2011 Weblizards GbR (http://www.weblizards.de)
+ * @copyright  Copyright (c) 2016 Weblizards GmbH (http://www.weblizards.de)
  * @author     Thomas Keil <thomas@weblizards.de>
- * @license    http://www.pimcore.org/license     New BSD License
+ * @license    GPLv3
  */
-class Object_Class_Data_Itemselector extends Object_Class_Data_Multihref {
+class Itemselector extends Multihref {
     /**
      * Static type of this element
      *
      * @var string
      */
     public $fieldtype = "itemselector";
+
     public $source_parentid;
     public $source_classname;
     public $source_methodname;
+    public $source_recursive;
     public $sort_by;
 
     public function setsource_parentid($id)
@@ -69,54 +68,54 @@ class Object_Class_Data_Itemselector extends Object_Class_Data_Multihref {
       $this->sort_by = $sort_by;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getObjectsAllowed()
-    {
-        return array("Object_" . ucfirst($this->source_classname));
-    }
-
-  /**
-   * @see Object_Class_Data::getDataFromEditmode
-   * @param array $data
-   * @param null|Object_Abstract $object
-   * @return array
-   */
-  public function getDataFromEditmode($data, $object = null) {
-    //if not set, return null
-    if ($data === null or $data === FALSE) {
-      return null;
-    }
-
-    $elements = array();
-    $data = explode(",",$data);
-    if (is_array($data) && count($data) > 0) {
-      foreach ($data as $id) {
-        $elements[] = Element_Service::getElementById("object", $id);
-      }
-
-    }
-    //must return array if data shall be set
-    return $elements;
-  }
-
-  /**
-   * @see Object_Class_Data::getDataForEditmode
-   * @param array $data
-   * @param null|Object_Abstract $object
-   * @return array
-   */
-  public function getDataForEditmode($data, $object = null) {
-    $return = array();
-
-    if (is_array($data) && count($data) > 0) {
-      foreach ($data as $element) {
-        $return[] = $element->geto_id();
-      }
-      return implode(",", $return);
-    }
-
-    return false;
-  }
+//    /**
+//     * @return boolean
+//     */
+//    public function getObjectsAllowed()
+//    {
+//        return array("Object_" . ucfirst($this->source_classname));
+//    }
+//
+//  /**
+//   * @see Object_Class_Data::getDataFromEditmode
+//   * @param array $data
+//   * @param null|Object_Abstract $object
+//   * @return array
+//   */
+//  public function getDataFromEditmode($data, $object = null) {
+//    //if not set, return null
+//    if ($data === null or $data === FALSE) {
+//      return null;
+//    }
+//
+//    $elements = array();
+//    $data = explode(",",$data);
+//    if (is_array($data) && count($data) > 0) {
+//      foreach ($data as $id) {
+//        $elements[] = Element_Service::getElementById("object", $id);
+//      }
+//
+//    }
+//    //must return array if data shall be set
+//    return $elements;
+//  }
+//
+//  /**
+//   * @see Object_Class_Data::getDataForEditmode
+//   * @param array $data
+//   * @param null|Object_Abstract $object
+//   * @return array
+//   */
+//  public function getDataForEditmode($data, $object = null) {
+//    $return = array();
+//
+//    if (is_array($data) && count($data) > 0) {
+//      foreach ($data as $element) {
+//        $return[] = $element->geto_id();
+//      }
+//      return implode(",", $return);
+//    }
+//
+//    return false;
+//  }
 }
