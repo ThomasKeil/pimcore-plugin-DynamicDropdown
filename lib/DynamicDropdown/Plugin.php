@@ -17,14 +17,14 @@ class Plugin extends AbstractPlugin implements PluginInterface {
      *  install function
      * @return string $message statusmessage to display in frontend
      */
-	public static function install()
+    public static function install()
     {
-		if(self::isInstalled()){
-			$statusMessage = "installed";
-		} else {
-			$statusMessage = "not installed";
-		}
-		return $statusMessage;
+        if(self::isInstalled()){
+            $statusMessage = "installed";
+        } else {
+            $statusMessage = "not installed";
+        }
+        return $statusMessage;
     }
 
     /**
@@ -40,7 +40,7 @@ class Plugin extends AbstractPlugin implements PluginInterface {
      *  indicates wether this plugins is currently installed
      * @return boolean
      */
-	public static function isInstalled()
+    public static function isInstalled()
     {
         return true;
     }
@@ -49,9 +49,9 @@ class Plugin extends AbstractPlugin implements PluginInterface {
      * uninstall function
      * @return string $messaget status message to display in frontend
      */
-	public static function uninstall()
+    public static function uninstall()
     {
-		return "uninstall not necessary";
+        return "uninstall not necessary";
     }
 
 
@@ -66,9 +66,5 @@ class Plugin extends AbstractPlugin implements PluginInterface {
         }
         return "/DynamicDropdown/texts/en.csv";
         
-    }
-
-    public function preDispatch() {
-//        class_alias("\\Object\\ClassDefinition\\Data\\DynamicDropdown", "Object_Class_Data_DynamicDropdown");
     }
 }
