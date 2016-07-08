@@ -15,107 +15,67 @@ pimcore.object.tags.superboxselect = Class.create(pimcore.object.tags.multihref,
 
     type: "superboxselect",
 
-    initialize: function (data, fieldConfig) {
-
-        this.data = data;
-        this.fieldConfig = fieldConfig;
-        this.mode = 'remote';
-
-        this.fieldConfig.index = 15008;
-
-        remote_data = null;
-        jQuery.ajax({
-            url: "/plugin/DynamicDropdown/dynamicdropdown/options",
-            async: false,
-            dataType: "json",
-            type: "GET",
-            data: {
-                source_parent: fieldConfig.source_parentid,
-                source_methodname: fieldConfig.source_methodname,
-                source_classname: fieldConfig.source_classname,
-                source_recursive: fieldConfig.source_recursive,
-                current_language: pimcore.settings.language
-            },
-            success: function(data) {
-                remote_data = data;
-            }
-        });
-        
-        this.fieldConfig.options = remote_data;			 
-    },
-
-    isDirty:function () {
-        var dirty = false;
-
-        if (!this.superboxselect.rendered) {
-            return false;
-        }
-
-        dirty = this.superboxselect.isDirty();
-
-        // once a field is dirty it should be always dirty (not an ExtJS behavior)
-        if (this.superboxselect["__pimcore_dirty"]) {
-            dirty = true;
-        }
-        if (dirty) {
-            this.superboxselect["__pimcore_dirty"] = true;
-        }
-
-        return dirty;
-
-    },
 
     getLayoutEdit: function () {
-        var sort_by = this.fieldConfig.sort_by == "byvalue" ? "value" : "id";
-
-        var store =new Ext.data.ArrayStore({
-            sortInfo: { field: sort_by, direction: "ASC" },
-            fields: [
-                {name: "id", type: "int"},
-                {name: "value", type: "string"}
-            ]
+        this.options_store = new Ext.data.JsonStore({
+            proxy: {
+                type: 'ajax',
+                url: '/plugin/DynamicDropdown/dynamicdropdown/options',
+                extraParams: {
+                    source_parent: this.fieldConfig.source_parentid,
+                    source_methodname: this.fieldConfig.source_methodname,
+                    source_classname: this.fieldConfig.source_classname,
+                    source_recursive: this.fieldConfig.source_recursive,
+                    current_language: pimcore.settings.language,
+                    sort_by: this.fieldConfig.sort_by,
+                    requesting_field: "superboxselect_" + this.fieldConfig.title
+                }
+            },
+            fields: ["key", "value"],
+            listeners: {
+                "load": function(/* store */) {
+                    this.component.setValue(this.data, null, true);
+                }.bind(this)
+            },
+            autoLoad: true
         });
-        for (var i = 0; i < this.fieldConfig.options.length; i++) {
-            var value = this.fieldConfig.options[i].value;
-            var key = this.fieldConfig.options[i].key;
-            var record = new store.recordType({id: value, value: ts(key)});
-            store.add(record);
-        }
 
-        //this.sortStore(store);
         var options = {
-            allowBlank:false,
-            queryDelay: 0,
-            triggerAction: 'all',
-            resizable: true,
-            mode: 'local',
-            anchor:'100%',
-            minChars: 1,
+            name: this.fieldConfig.name,
+            displayField: "key",
+            valueField: "value",
             fieldLabel: this.fieldConfig.title,
-            emptyText: t("choose_tags"),
-            name: 'superboxselect',
-            value: this.data,
-            store: store,
-            displayField: 'value',
-            valueField: 'id',
-            forceFormValue: true
+            store: this.options_store,
+            width: 600,
+            listeners: {
+                blur: {
+                    fn: function() {
+                        this.dataChanged = true;
+                    }.bind(this)
+                }
+            }
         };
 
         if (this.fieldConfig.width) {
             options.width = this.fieldConfig.width;
         }
 
-        this.superboxselect = new Ext.ux.form.SuperBoxSelect(options);
-        this.component = this.superboxselect;
+        this.component = new Ext.form.field.Tag(options);
         return this.component;
+
 
     },
 
-    getValue: function () {
-        if(this.isRendered()) {
-            return this.component.getValue();
-        }
-    }
+    getGridColumnEditor:function (field) {
+        return null;
+    },
 
+    getGridColumnFilter:function (field) {
+        return null;
+    },
+
+    getValue: function () {
+        return this.component.getValue();
+    }
 
 });

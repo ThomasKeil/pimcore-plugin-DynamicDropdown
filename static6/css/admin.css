@@ -14,6 +14,10 @@
     background: url(/plugins/DynamicDropdown/static6/img/dynamicdropdownitemselector-logo.svg) left center no-repeat !important;
 }
 
+.pimcore_icon_superboxselect {
+    background: url(/plugins/DynamicDropdown/static6/img/dynamicdropdowntag-logo.svg) left center no-repeat !important;
+}
+
 .x-form-itemselector-btn{
     font: 16px/30px FontAwesome;
 }
