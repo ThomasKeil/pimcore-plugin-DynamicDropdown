@@ -68,12 +68,14 @@ class Superboxselect extends Multihref {
         $this->sort_by = $sort_by;
     }
 
-//  /**
-//   * @return boolean
-//   */
-//  public function getObjectsAllowed() {
-//    return array("Object_" . ucfirst($this->source_classname));
-//  }
+    /**
+     * @return boolean
+     */
+    public function getObjectsAllowed()
+    {
+        return true;
+    }
+
 //
 //  /**
 //   * @see Object_Class_Data::getDataFromEditmode

@@ -73,12 +73,11 @@ class DynamicDropdownMultiple extends Multiselect
         return $this->sort_by;
     }
 
-// TODO Delete this if there are no errors... is this obsolete?
-//    /**
-//     * @return boolean
-//     */
-//    public function getObjectsAllowed()
-//    {
-//        return array("Object_" . ucfirst($this->source_classname));
-//    }
+    /**
+     * @return boolean
+     */
+    public function getObjectsAllowed()
+    {
+        return true;
+    }
 }

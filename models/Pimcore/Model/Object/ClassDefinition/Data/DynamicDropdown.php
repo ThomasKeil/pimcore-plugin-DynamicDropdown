@@ -97,13 +97,11 @@ class DynamicDropdown extends Href
         return Service::getElementById("object", $data);
     }
 
-//
-//    /**
-//     * @return boolean
-//     */
-//    public function getObjectsAllowed()
-//    {
-//        return array("Object_".ucfirst($this->source_classname));
-//    }
-//
+    /**
+     * @return boolean
+     */
+    public function getObjectsAllowed()
+    {
+        return true;
+    }
 }

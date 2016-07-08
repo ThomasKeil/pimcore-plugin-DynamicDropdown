@@ -12,7 +12,7 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
 
     type: "dynamicDropdown",
     allowIndex: true,
-		
+
     /**
       * define where this datatype is allowed
       */
