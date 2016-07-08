@@ -10,6 +10,7 @@
 
 use Pimcore\Controller\Action;
 use Pimcore\Model\Object;
+use Pimcore\Cache;
 
 class Dynamicdropdown_DynamicdropdownController extends Action
 {
@@ -25,35 +26,40 @@ class Dynamicdropdown_DynamicdropdownController extends Action
 
         $filter = new \Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9/\-_]@", "replace" => ""));
         $parentFolderPath = $filter->filter($this->getParam("source_parent"));
-
-
-        if ($parentFolderPath) {
-            // remove trailing slash
-            if($parentFolderPath != "/") {
-                $parentFolderPath = rtrim($parentFolderPath,"/ ");
-            }
-
-            // correct wrong path (root-node problem)
-            $parentFolderPath = str_replace("//","/",$parentFolderPath);
-
-            $folder = Object\Folder::getByPath($parentFolderPath);
-
-            if ($folder) {
-                $options = $this->walk_path($folder);
-            } else {
-                Logger::warning("The folder submitted for could not be found: \"".$this->_getParam("source_parent")."\"");
-            }
-        } else {
-            Logger::warning("The folder submitted for source_parent is not valid: \"".$this->_getParam("source_parent")."\"");
-        }
-
         $sort = $this->getParam("sort_by");
-        usort($options, function($a, $b) use ($sort) {
-            $field = "id";
-            if ($sort == "byvalue") $field = "key";
-            if ($a[$field] == $b[$field]) return 0;
-            return $a[$field] < $b[$field] ? 0 : 1;
-        });
+
+        $cache_key = "ddoptions_".md5($parentFolderPath."_".$sort);
+        $options = Cache::load($cache_key);
+
+        if ($options === false) {
+            if ($parentFolderPath) {
+                // remove trailing slash
+                if ($parentFolderPath != "/") {
+                    $parentFolderPath = rtrim($parentFolderPath, "/ ");
+                }
+
+                // correct wrong path (root-node problem)
+                $parentFolderPath = str_replace("//", "/", $parentFolderPath);
+
+                $folder = Object\Folder::getByPath($parentFolderPath);
+
+                if ($folder) {
+                    $options = $this->walk_path($folder);
+                } else {
+                    Logger::warning("The folder submitted for could not be found: \"" . $this->_getParam("source_parent") . "\"");
+                }
+            } else {
+                Logger::warning("The folder submitted for source_parent is not valid: \"" . $this->_getParam("source_parent") . "\"");
+            }
+
+            usort($options, function ($a, $b) use ($sort) {
+                $field = "id";
+                if ($sort == "byvalue") $field = "key";
+                if ($a[$field] == $b[$field]) return 0;
+                return $a[$field] < $b[$field] ? 0 : 1;
+            });
+            Cache::save($options, $cache_key);
+        }
 
         $this->_helper->json($options);
     }
