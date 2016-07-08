@@ -1,8 +1,8 @@
 <?php
 
 namespace Pimcore\Model\Object\ClassDefinition\Data;
-
-use Pimcore\Model;
+use Pimcore\Model\Object\AbstractObject;
+use Pimcore\Model\Object\Service;
 
 /**
  * @category   Pimcore
@@ -78,7 +78,7 @@ class Itemselector extends Multihref
     /**
      * @see Object\ClassDefinition\Data::getDataForEditmode
      * @param array $data
-     * @param null|Model\Object\AbstractObject $object
+     * @param null|AbstractObject $object
      * @param mixed $params
      * @return array
      */
@@ -92,7 +92,7 @@ class Itemselector extends Multihref
         $elements = array();
         if (is_array($data) && count($data) > 0) {
             foreach ($data as $id) {
-                $elements[] = Model\Object\Service::getElementById("object", $id);
+                $elements[] = Service::getElementById("object", $id);
             }
 
         }
@@ -103,7 +103,7 @@ class Itemselector extends Multihref
     /**
      * @see Object\ClassDefinition\Data::getDataForEditmode
      * @param array $data
-     * @param null|Model\Object\AbstractObject $object
+     * @param null|AbstractObject $object
      * @param mixed $params
      * @return array
      */
@@ -113,7 +113,8 @@ class Itemselector extends Multihref
 
         if (is_array($data) && count($data) > 0) {
             foreach ($data as $element) {
-                $return[] = $element->geto_id();
+                /** @var AbstractObject $element */
+                $return[] = $element->getId();
             }
             return implode(",", $return);
         }

@@ -62,8 +62,7 @@ pimcore.object.tags.itemselector = Class.create(pimcore.object.tags.multiselect,
             store: this.options_store,
             fromTitle: t('itemselector_available'),
             toTitle: t('itemselector_selected'),
-            width: 600,
-            imagePath: "/plugins/DynamicDropdown/static6/js/img/"
+            width: 600
         };
 
         if (this.fieldConfig.width) {
