@@ -52,7 +52,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                 Logger::warning("The folder submitted for source_parent is not valid: \"" . $this->_getParam("source_parent") . "\"");
             }
 
-            usort($options, function ($a, $b) use ($sort) {
+            if (!is_null($options)) usort($options, function ($a, $b) use ($sort) {
                 $field = "id";
                 if ($sort == "byvalue") $field = "key";
                 if ($a[$field] == $b[$field]) return 0;
