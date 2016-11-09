@@ -100,7 +100,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                 /** @var Object\Concrete $child */
                 $class = get_class($child);
                 switch ($class) {
-                      case "\\Pimcore\\Model\\Object\\Folder":
+                      case "Pimcore\\Model\\Object\\Folder":
                         /**
                          * @var Object\Folder $child
                          */
