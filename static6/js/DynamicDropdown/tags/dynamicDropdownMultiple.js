@@ -26,11 +26,11 @@ pimcore.object.tags.dynamicDropdownMultiple = Class.create(pimcore.object.tags.m
                 }
             },
             fields: ["key", "value"],
-            listeners: {
-                "load": function(/* store */) {
-                    this.component.setValue(this.data);
-                }.bind(this)
-            },
+            // listeners: {
+            //     "load": function(/* store */) {
+            //         this.component.setValue(this.data);
+            //     }.bind(this)
+            // },
             autoLoad: true
         });
 
@@ -45,7 +45,9 @@ pimcore.object.tags.dynamicDropdownMultiple = Class.create(pimcore.object.tags.m
             height: 100,
             displayField: "key",
             valueField: "value",
-            labelWidth: this.fieldConfig.labelWidth ? this.fieldConfig.labelWidth : 100
+            labelWidth: this.fieldConfig.labelWidth ? this.fieldConfig.labelWidth : 100,
+            autoLoadOnValue: true,
+            value: this.data
         };
 
         options.width = 300;

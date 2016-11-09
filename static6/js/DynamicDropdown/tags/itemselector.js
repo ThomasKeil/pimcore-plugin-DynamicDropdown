@@ -46,11 +46,11 @@ pimcore.object.tags.itemselector = Class.create(pimcore.object.tags.multiselect,
                 }
             },
             fields: ["key", "value"],
-            listeners: {
-                "load": function(/* store */) {
-                    this.component.setValue(this.data);
-                }.bind(this)
-            },
+            // listeners: {
+            //     "load": function(/* store */) {
+            //         this.component.setValue(this.data);
+            //     }.bind(this)
+            // },
             autoLoad: true
         });
 
@@ -62,7 +62,8 @@ pimcore.object.tags.itemselector = Class.create(pimcore.object.tags.multiselect,
             store: this.options_store,
             fromTitle: t('itemselector_available'),
             toTitle: t('itemselector_selected'),
-            width: 600
+            width: 600,
+            value: this.data
         };
 
         if (this.fieldConfig.width) {

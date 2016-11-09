@@ -34,11 +34,11 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
                 }
             },
             fields: ["key", "value"],
-            listeners: {
-                "load": function(/* store */) {
-                    this.component.setValue(this.data);
-                }.bind(this)
-            },
+            // listeners: {
+            //     "load": function(/* store */) {
+            //         this.component.setValue(this.data);
+            //     }.bind(this)
+            // },
             autoLoad: true
         });
 
@@ -56,7 +56,9 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
             displayField: "key",
             valueField: "value",
             mode: "local",
-            autoSelect: true
+            autoSelect: false,
+            autoLoadOnValue: true,
+            value: this.data
         };
 
         if (this.fieldConfig.width) {
