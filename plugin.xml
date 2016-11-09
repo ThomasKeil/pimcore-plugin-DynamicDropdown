@@ -12,7 +12,7 @@
         <pluginBuildTimestamp>1336112744</pluginBuildTimestamp>
         <!-- <pluginIframeSrc>/plugin/DynamicDropdown/admin/settings</pluginIframeSrc> -->
         <!-- className of the plugin which extends Pimcore_API_Plugin_Abstract-->
-        <pluginClassName>DynamicDropdown_Plugin</pluginClassName>
+        <pluginClassName>DynamicDropdown\Plugin</pluginClassName>
         <!-- include paths relative to plugin-directory -->
 	<!-- css files needed for pimcore plugin (backend) with path relative to plugin-directory -->
         <pluginCssPaths>
@@ -20,6 +20,7 @@
         </pluginCssPaths>  				
         <pluginIncludePaths>
             <path>/DynamicDropdown/lib</path>
+            <path>/DynamicDropdown/models</path>
             <path>/DynamicDropdown/controllers</path>
         </pluginIncludePaths>
         <!-- namespaces to register with autoloader-->
@@ -37,6 +38,22 @@
             <path>/DynamicDropdown/static/js/DynamicDropdown/tags/itemselector.js</path>
             <path>/DynamicDropdown/static/js/DynamicDropdown/tags/superboxselect.js</path>
         </pluginJsPaths>
+
+        <pluginJsPaths-extjs6>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/data/dynamicDropdown.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/data/dynamicDropdownMultiple.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/data/itemselector.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/data/superboxselect.js</path>
+
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/tags/dynamicDropdown.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/tags/dynamicDropdownMultiple.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/tags/itemselector.js</path>
+            <path>/DynamicDropdown/static6/js/DynamicDropdown/tags/superboxselect.js</path>
+        </pluginJsPaths-extjs6>
+        <pluginCssPaths-extjs6>
+            <path>/DynamicDropdown/static6/css/admin.css</path>
+        </pluginCssPaths-extjs6>
+
         <pluginIcon>/plugins/DynamicDropdown/static/img/dynamicdropdown-logo.png</pluginIcon>
     </plugin>
 </zend-config>

@@ -1,0 +1,42 @@
+.Dynamicdropdown_icon_element{
+    background: url(/plugins/DynamicDropdown/static6/img/dynamicdropdown-logo.svg) left center no-repeat !important;
+}
+
+.pimcore_icon_dynamicDropdown{
+    background: url(/plugins/DynamicDropdown/static6/img/dynamicdropdown-logo.svg) left center no-repeat !important;
+}
+
+.pimcore_icon_dynamicDropdownMultiple{
+    background: url(/plugins/DynamicDropdown/static6/img/dynamicdropdownmultiple-logo.svg) left center no-repeat !important;
+}
+
+.pimcore_icon_itemselector{
+    background: url(/plugins/DynamicDropdown/static6/img/dynamicdropdownitemselector-logo.svg) left center no-repeat !important;
+}
+
+.pimcore_icon_superboxselect {
+    background: url(/plugins/DynamicDropdown/static6/img/dynamicdropdowntag-logo.svg) left center no-repeat !important;
+}
+
+.x-form-itemselector-btn{
+    font: 16px/30px FontAwesome;
+}
+
+.x-form-itemselector-top:before{
+    content: "\f102";
+}
+.x-form-itemselector-up:before{
+    content: "\f106";
+}
+.x-form-itemselector-add:before{
+    content: "\f105";
+}
+.x-form-itemselector-remove:before{
+    content: "\f104";
+}
+.x-form-itemselector-down:before{
+    content: "\f107";
+}
+.x-form-itemselector-bottom:before{
+    content: "\f103";
+}

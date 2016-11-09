@@ -11,6 +11,8 @@
 "value", "Wert"
 "itemselector", "Itemselector"
 "itemselector_settings", "Itemselector settings"
+"itemselector_available", "Available"
+"itemselector_selected", "Selected"
 "superboxselect", "Superbox Select"
 "superboxselect_settings", "Superbox Select settings"
 "choose_tags", "Choose tags"

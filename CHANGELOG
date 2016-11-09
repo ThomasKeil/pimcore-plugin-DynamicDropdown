@@ -50,3 +50,10 @@ Patch kindly provided by Thomas Akkermans (http://www.pimcore.org/board/memberli
 - Added compability to 3.0
   This is just a quick fix to make it work, I'll do a fork soon to integrate some new features :-)
   
+0.9.0 - July 2016
+=============================
+- Compability with Pimcore 4.x
+  - Extjs6
+  - Namespaces
+- Reformatting to PSR-2
+- Removed my youthful follies like synchronous ajax requests in favor for stores/proxies
