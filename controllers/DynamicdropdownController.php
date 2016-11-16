@@ -29,6 +29,12 @@ class Dynamicdropdown_DynamicdropdownController extends Action
         $sort = $this->getParam("sort_by");
 
         $cache_key = "ddoptions_".md5($parentFolderPath."_".$sort);
+
+        if (!class_exists("\\Pimcore\\Cache")) {
+            class_alias("\\Pimcore\\Model\\Cache", "\\Pimcore\\Cache");
+        }
+
+        
         $options = Cache::load($cache_key);
 
         if ($options === false) {
