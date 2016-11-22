@@ -81,7 +81,7 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
                     fn: function(combo/*, value*/) {
                         this.methodsCombo.store.reload({
                             params: {
-                                classname: combo.getValue()
+                                classname: this.classesCombo.getValue()
                             }
                         });
                         this.methodsCombo.setValue("");
@@ -94,16 +94,15 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             autoDestroy: true,
             proxy: {
                 type: 'ajax',
-                url: '/plugin/DynamicDropdown/dynamicdropdown/methods'
+                url: '/plugin/DynamicDropdown/dynamicdropdown/methods',
+                extraParams: {
+                    classname: this.classesCombo.getValue()
+                }
             },
             fields: ["key", "value"],
         });
 
-        this.methodsStore.load({
-            params: {
-                classname: this.classesCombo.getValue()
-            }
-        });
+        this.methodsStore.load();
 
         this.methodsCombo = new Ext.form.ComboBox({
             fieldLabel: t("methodname"),
