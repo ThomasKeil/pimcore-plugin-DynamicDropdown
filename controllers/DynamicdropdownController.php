@@ -70,7 +70,6 @@ class Dynamicdropdown_DynamicdropdownController extends Action
             foreach ($options as $option) {
                 $cache_tags[] = "object_".$option["value"];
             }
-            dump($cache_tags);
             Cache::save($options, $cache_key, $cache_tags);
         }
 
