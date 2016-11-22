@@ -38,6 +38,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
         $options = Cache::load($cache_key);
 
         if ($options === false) {
+            $cache_tags = [];
             if ($parentFolderPath) {
                 // remove trailing slash
                 if ($parentFolderPath != "/") {
@@ -50,6 +51,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                 $folder = Object\Folder::getByPath($parentFolderPath);
 
                 if ($folder) {
+                    $cache_tags[] = "object_".$folder->getId();
                     $options = $this->walk_path($folder);
                 } else {
                     Logger::warning("The folder submitted for could not be found: \"" . $this->_getParam("source_parent") . "\"");
@@ -64,7 +66,12 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                 if ($a[$field] == $b[$field]) return 0;
                 return $a[$field] < $b[$field] ? 0 : 1;
             });
-            Cache::save($options, $cache_key);
+
+            foreach ($options as $option) {
+                $cache_tags[] = "object_".$option["value"];
+            }
+            dump($cache_tags);
+            Cache::save($options, $cache_key, $cache_tags);
         }
 
         $this->_helper->json($options);
