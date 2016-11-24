@@ -1,10 +1,13 @@
 <?php 
 
 namespace Pimcore\Model\Object\ClassDefinition\Data;
+
 use Pimcore\Model\Asset;
 use Pimcore\Model\Document;
 use Pimcore\Model\Object\Service;
 use Pimcore\Model\Object\AbstractObject;
+use Pimcore\Model\Element;
+use Pimcore\Model\Object;
 
 /**
  * @category   Pimcore
@@ -86,6 +89,7 @@ class DynamicDropdown extends Href
         return null;
     }
 
+
     /**
      * @see Data::getDataFromEditmode
      * @param int $data
@@ -97,11 +101,39 @@ class DynamicDropdown extends Href
         return Service::getElementById("object", $data);
     }
 
-    /**
-     * @return boolean
-     */
-    public function getObjectsAllowed()
+
+    public function getDataForGrid($data, $object = null, $params = [])
     {
-        return true;
+        if (is_int($data)) {
+            $data = Object::getById($data);
+        }
+        if ($data instanceof Element\ElementInterface) {
+            $method = $this->getsource_methodname();
+            return $data->$method();
+        }
     }
+
+    public function getDataForResource($data, $object = null, $params = [])
+    {
+        if (is_int($data)) {
+            return [[
+                "dest_id" => $data,
+                "type" => "object",
+                "fieldname" => $this->getName()
+            ]];
+        }
+
+        return parent::getDataForResource($data, $object, $params);
+
+    }
+
+
+
+
+    public function checkValidity($data, $omitMandatoryCheck = false)
+    {
+        return;
+    }
+
+
 }
