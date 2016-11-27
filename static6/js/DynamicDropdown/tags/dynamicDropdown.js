@@ -123,7 +123,19 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
             queryMode: "local",
             autoSelect: false,
             autoLoadOnValue: true,
-            value: this.data
+            value: this.data,
+            listConfig: {
+                 getInnerTpl: function(displayField) {
+                     return '<tpl for="."><tpl if="published == true">{key}<tpl else><div class="x-combo-item-disabled x-item-disabled">{key}</div></tpl></tpl>';
+                 }
+            },
+            listeners: {
+                beforeselect: function (combo, record, index, e) {
+                    if (!record.data.published) {
+                        e.stopEvent();
+                    }
+                }
+            }
         };
 
         if (this.fieldConfig.width) {

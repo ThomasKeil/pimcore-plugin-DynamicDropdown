@@ -111,7 +111,8 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                         $key = $usesI18n ? $child->$source($current_lang) : $child->$source();
                         $options[] = array(
                             "value" => $child->getId(),
-                            "key" => ltrim($path.$this->separator.$key, $this->separator)
+                            "key" => ltrim($path.$this->separator.$key, $this->separator),
+                            "published" => $child->getPublished()
                         );
                         if ($this->getParam("source_recursive") == "true")
                             $options = $this->walk_path($child, $options, $path.$this->separator.$key);
