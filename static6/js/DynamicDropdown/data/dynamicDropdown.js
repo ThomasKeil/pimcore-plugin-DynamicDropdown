@@ -114,6 +114,7 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
             displayField: "value",
             valueField: "key",
             summaryDisplay:true,
+            queryMode: "local",
             value: this.datax.source_methodname
         });
 
