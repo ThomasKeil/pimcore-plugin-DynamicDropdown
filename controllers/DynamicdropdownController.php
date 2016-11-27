@@ -79,7 +79,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
             $object_name = "Pimcore\\Model\\Object\\" . ucfirst($this->_getParam("source_classname"));
 
             $usesI18n = false;
-            $children = $folder->getChilds();
+            $children = $folder->getChildren();
             if (is_array($children)) {
                 foreach ($children as $i18n_probe_child) {
                     if ($i18n_probe_child instanceof Object\Concrete) {
@@ -184,7 +184,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
     private function parse_tree($tree, $definition)
     {
         if ($tree instanceof Object\ClassDefinition\Layout || $tree instanceof Object\ClassDefinition\Data\Localizedfields) { // Did I forget something?
-            $children = $tree->getChilds();
+            $children = $tree->getChildren();
             foreach ($children as $child) {
                 $definition["get".ucfirst($child->name)] = $tree->fieldtype == "localizedfields";
                 $definition = $this->parse_tree($child, $definition);
