@@ -120,7 +120,7 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
             width: 300,
             displayField: "key",
             valueField: "value",
-            mode: "local",
+            queryMode: "local",
             autoSelect: false,
             autoLoadOnValue: true,
             value: this.data
