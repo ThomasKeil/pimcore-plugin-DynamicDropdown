@@ -23,20 +23,12 @@ composer require thomas-keil/dynamic-dropdown
 The plugin provides several input elements and thus extends pimcores
 class data compent menu in the section "Select".
 
-### Dynamic Dropdown
+### Options
 
-![Dynamic Dropdown](docs/datacomponent_dynamicdropdown.png)
+The options for all input elements are the same, only the way the information is
+presented differes.
 
-The Dynamic Dropdown is the "classic" version of the provided input elements:
-a dropdown input field (ExtJS: Combobox). Every option is provided by an object
-in a configured folder, by a configured method.
-The folder can have nested subfolders, but only one type of object class can provide
-the data.
-
-
-#### Options
-
-![Dynamic Dropdown](docs/datacomponent_dynamicdropdown.png)
+![Dynamic Dropdown](docs/options.png)
 
 Following options need to be set:
 
@@ -48,3 +40,14 @@ Following options need to be set:
 * Allowed classes: the object class, that provides the data. Only objects of this class we be considered, all others will be ignored.
 * Method: the method that provides the data. The possible methods are extracted from the class definition of the source class.
 
+
+
+### Dynamic Dropdown
+
+![Dynamic Dropdown](docs/datacomponent_dynamicdropdown.png)
+
+The Dynamic Dropdown is the "classic" version of the provided input elements:
+a dropdown input field (ExtJS: Combobox). Every option is provided by an object
+in a configured folder, by a configured method.
+The folder can have nested subfolders, but only one type of object class can provide
+the data.
