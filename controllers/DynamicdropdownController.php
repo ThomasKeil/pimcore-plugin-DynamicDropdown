@@ -188,12 +188,13 @@ class Dynamicdropdown_DynamicdropdownController extends Action
      */
     private function isUsingI18n(Object\Concrete $object, $method)
     {
-        // Stolen from Object_Class_Resource - it's protected there.
-        $file = PIMCORE_CLASS_DIRECTORY."/definition_".$object->getClassId().".psf";
-        if(!is_file($file)) {
+        $class_definition = $object->getClass();
+        $definitionFile = $class_definition->getDefinitionFile();
+
+        if(!is_file($definitionFile)) {
             return false;
         }
-        $tree = unserialize(file_get_contents($file));
+        $tree = include $definitionFile;
         $definition = $this->parse_tree($tree, array());
         return $definition[$method];
     }
