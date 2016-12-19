@@ -10,7 +10,6 @@
 
 use Pimcore\Controller\Action;
 use Pimcore\Model\Object;
-use Pimcore\Cache;
 
 class Dynamicdropdown_DynamicdropdownController extends Action
 {
@@ -27,6 +26,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
         $filter = new \Zend_Filter_PregReplace(array("match" => "@[^a-zA-Z0-9/\-_]@", "replace" => ""));
         $parentFolderPath = $filter->filter($this->getParam("source_parent"));
         $sort = $this->getParam("sort_by");
+        $options = [];
 
         if ($parentFolderPath) {
             // remove trailing slash
@@ -40,13 +40,26 @@ class Dynamicdropdown_DynamicdropdownController extends Action
             $folder = Object\Folder::getByPath($parentFolderPath);
 
             if ($folder) {
-                $cache_tags[] = "object_".$folder->getId();
                 $options = $this->walk_path($folder);
             } else {
-                Logger::warning("The folder submitted for could not be found: \"" . $this->_getParam("source_parent") . "\"");
+                $message = "The folder submitted could not be found: \"" . $this->_getParam("source_parent") . "\"";
+                \Pimcore\Logger::crit($message);
+                $this->_helper->json([
+                    "success" => false,
+                    "message" => $message,
+                    "options" => $options
+                ]);
             }
         } else {
-            Logger::warning("The folder submitted for source_parent is not valid: \"" . $this->_getParam("source_parent") . "\"");
+            $message = "The folder submitted for source_parent is not valid: \"" . $this->_getParam("source_parent") . "\"";
+            \Pimcore\Logger::warning($message);
+            $this->_helper->json([
+                "success" => false,
+                "message" => $message,
+                "options" => $options
+            ]);
+
+
         }
 
         if (!is_null($options)) usort($options, function ($a, $b) use ($sort) {
@@ -56,11 +69,11 @@ class Dynamicdropdown_DynamicdropdownController extends Action
             return $a[$field] < $b[$field] ? 0 : 1;
         });
 
-        foreach ($options as $option) {
-            $cache_tags[] = "object_".$option["value"];
-        }
 
-        $this->_helper->json($options);
+        $this->_helper->json([
+            "success" => true,
+            "options" => $options
+        ]);
     }
 
     /**
@@ -91,8 +104,16 @@ class Dynamicdropdown_DynamicdropdownController extends Action
             $current_lang = $this->getParam("current_language");
 
             if (!Pimcore\Tool::isValidLanguage($current_lang)) {
-                $languages = Pimcore\Tool::getValidLanguages();
-                $current_lang = $languages[0]; // TODO: Is this sensible?
+                $current_lang = null;
+                if (Pimcore\Version::$revision >= 3159) {
+                    $current_lang = Pimcore\Tool::getDefaultLanguage();
+                } else {
+                    $languages = Pimcore\Tool::getValidLanguages();
+                    $current_lang = $languages[0];
+                }
+                if (is_null($current_lang)) {
+                    $usesI18n = false;
+                }
             }
 
             foreach ($children as $child) {
@@ -111,7 +132,8 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                         $key = $usesI18n ? $child->$source($current_lang) : $child->$source();
                         $options[] = array(
                             "value" => $child->getId(),
-                            "key" => ltrim($path.$this->separator.$key, $this->separator)
+                            "key" => ltrim($path.$this->separator.$key, $this->separator),
+                            "published" => $child->getPublished()
                         );
                         if ($this->getParam("source_recursive") == "true")
                             $options = $this->walk_path($child, $options, $path.$this->separator.$key);
@@ -166,12 +188,13 @@ class Dynamicdropdown_DynamicdropdownController extends Action
      */
     private function isUsingI18n(Object\Concrete $object, $method)
     {
-        // Stolen from Object_Class_Resource - it's protected there.
-        $file = PIMCORE_CLASS_DIRECTORY."/definition_".$object->getClassId().".psf";
-        if(!is_file($file)) {
+        $class_definition = $object->getClass();
+        $definitionFile = $class_definition->getDefinitionFile();
+
+        if(!is_file($definitionFile)) {
             return false;
         }
-        $tree = unserialize(file_get_contents($file));
+        $tree = include $definitionFile;
         $definition = $this->parse_tree($tree, array());
         return $definition[$method];
     }
