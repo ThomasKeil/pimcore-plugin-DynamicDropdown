@@ -14,7 +14,6 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
         if(field.layout.noteditable) {
             return null;
         }
-
         this.options_store = new Ext.data.JsonStore({
             proxy: {
                 type: 'ajax',
@@ -26,14 +25,20 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
                     source_recursive: field.layout.source_recursive,
                     current_language: pimcore.settings.language,
                     sort_by: field.layout.sort_by
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'options',
+                    successProperty: 'success',
+                    messageProperty: 'message'
                 }
             },
             fields: ["key", "value"],
-            // listeners: {
-            //     "load": function(/* store */) {
-            //         this.component.setValue(this.data);
-            //     }.bind(this)
-            // },
+            listeners: {
+                load: function(store, records, success, operation) {
+                    console.debug(operation);
+                }.bind(this)
+            },
             autoLoad: true
         });
 
@@ -46,18 +51,6 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
             displayField: 'key'
         };
 
-
-
-        // TODO
-        //if (typeof this.data == "string" || typeof this.data == "number") {
-        //    if (in_array(this.data, validValues)) {
-        //        options.value = this.data;
-        //    } else {
-        //        options.value = "";
-        //    }
-        //} else {
-        //    options.value = "";
-        //}
 
         return new Ext.form.ComboBox(options);
     },
@@ -96,14 +89,22 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
                     source_recursive: this.fieldConfig.source_recursive,
                     current_language: pimcore.settings.language,
                     sort_by: this.fieldConfig.sort_by
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'options',
+                    successProperty: 'success',
+                    messageProperty: 'message'
                 }
             },
             fields: ["key", "value"],
-            // listeners: {
-            //     "load": function(/* store */) {
-            //         this.component.setValue(this.data);
-            //     }.bind(this)
-            // },
+            listeners: {
+                load: function(store, records, success, operation) {
+                    if (!success) {
+                        pimcore.helpers.showNotification(t("error"), t("error_loading_options"), "error", operation.getError());
+                    }
+                }.bind(this)
+            },
             autoLoad: true
         });
 
@@ -123,25 +124,29 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
             queryMode: "local",
             autoSelect: false,
             autoLoadOnValue: true,
-            value: this.data
+            value: this.data,
+            listConfig: {
+                getInnerTpl: function(displayField) {
+                    return '<tpl for="."><tpl if="published == true">{key}<tpl else><div class="x-combo-item-disabled x-item-disabled">{key}</div></tpl></tpl>';
+                }
+            }
         };
 
         if (this.fieldConfig.width) {
             options.width = this.fieldConfig.width;
         }
 
-        // TODO
-        //if (typeof this.data == "string" || typeof this.data == "number") {
-        //    if (in_array(this.data, validValues)) {
-        //        options.value = this.data;
-        //    } else {
-        //        options.value = "";
-        //    }
-        //} else {
-        //    options.value = "";
-        //}
 
         this.component = new Ext.form.ComboBox(options);
+
+        if (!this.fieldConfig.parked_selectable) {
+            this.component.addListener("beforeselect", function (combo, record, index, e) {
+                if (!record.data.published) {
+                    return false;
+                }
+            });
+        }
+
         return this.component;
     }    
 

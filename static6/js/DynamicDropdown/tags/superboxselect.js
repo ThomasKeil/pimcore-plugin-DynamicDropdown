@@ -29,11 +29,22 @@ pimcore.object.tags.superboxselect = Class.create(pimcore.object.tags.multihref,
                     current_language: pimcore.settings.language,
                     sort_by: this.fieldConfig.sort_by,
                     requesting_field: "superboxselect_" + this.fieldConfig.title
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'options',
+                    successProperty: 'success',
+                    messageProperty: 'message'
                 }
             },
             fields: ["key", "value"],
             listeners: {
-                "load": function(/* store */) {
+                load: function(store, records, success, operation) {
+                    if (!success) {
+                        pimcore.helpers.showNotification(t("error"), t("error_loading_options"), "error", operation.getError());
+                    }
+
+                    // FIXME is this necessary?
                     this.component.setValue(this.data, null, true);
                 }.bind(this)
             },

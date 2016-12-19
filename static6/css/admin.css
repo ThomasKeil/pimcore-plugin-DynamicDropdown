@@ -40,3 +40,11 @@
 .x-form-itemselector-bottom:before{
     content: "\f103";
 }
+
+.x-combo-item-disabled {
+    pointer-events: none;
+    color: #AAAAAA;
+}
+.x-combo-item-disabled:hover {
+    cursor: default;
+}
