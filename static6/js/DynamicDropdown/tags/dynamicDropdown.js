@@ -14,7 +14,6 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
         if(field.layout.noteditable) {
             return null;
         }
-
         this.options_store = new Ext.data.JsonStore({
             proxy: {
                 type: 'ajax',
@@ -26,14 +25,20 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
                     source_recursive: field.layout.source_recursive,
                     current_language: pimcore.settings.language,
                     sort_by: field.layout.sort_by
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'options',
+                    successProperty: 'success',
+                    messageProperty: 'message'
                 }
             },
             fields: ["key", "value"],
-            // listeners: {
-            //     "load": function(/* store */) {
-            //         this.component.setValue(this.data);
-            //     }.bind(this)
-            // },
+            listeners: {
+                load: function(store, records, success, operation) {
+                    console.debug(operation);
+                }.bind(this)
+            },
             autoLoad: true
         });
 
@@ -96,14 +101,22 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
                     source_recursive: this.fieldConfig.source_recursive,
                     current_language: pimcore.settings.language,
                     sort_by: this.fieldConfig.sort_by
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'options',
+                    successProperty: 'success',
+                    messageProperty: 'message'
                 }
             },
             fields: ["key", "value"],
-            // listeners: {
-            //     "load": function(/* store */) {
-            //         this.component.setValue(this.data);
-            //     }.bind(this)
-            // },
+            listeners: {
+                load: function(store, records, success, operation) {
+                    if (!success) {
+                        pimcore.helpers.showNotification(t("error"), t("error_loading_options"), "error", operation.getError());
+                    }
+                }.bind(this)
+            },
             autoLoad: true
         });
 
