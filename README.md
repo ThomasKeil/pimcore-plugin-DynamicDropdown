@@ -1,6 +1,7 @@
 # Pimcore - Dynamic Dropdown
 
-[![License](https://poser.pugx.org/thomas-keil/dynamic-dropdown/license)](https://packagist.org/packages/thomas-keil/dynamic-dropdown)[![Latest Stable Version](https://poser.pugx.org/thomas-keil/dynamic-dropdown/v/stable)](https://packagist.org/packages/thomas-keil/dynamic-dropdown)
+[![License](https://poser.pugx.org/thomas-keil/dynamic-dropdown/license)](https://packagist.org/packages/thomas-keil/dynamic-dropdown)  [![Latest Stable Version](https://poser.pugx.org/thomas-keil/dynamic-dropdown/v/stable)](https://packagist.org/packages/thomas-keil/dynamic-dropdown)
+
 Dynamic Dropdown allows you to populate pimcore input fields with the content of other objcts.
 
 ![Interface](docs/DynamicDropdown.png)
