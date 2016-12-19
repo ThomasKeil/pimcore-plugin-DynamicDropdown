@@ -169,6 +169,12 @@ pimcore.object.classes.data.dynamicDropdown = Class.create(pimcore.object.classe
                 checked: this.datax.source_recursive
             },
             {
+                xtype: "checkbox",
+                fieldLabel: t("parked_selectable"),
+                name: "parked_selectable",
+                checked: this.datax.parked_selectable
+            },
+            {
                 xtype: "combo",
                 fieldLabel: t("Sort by"),
                 name: "sort_by",

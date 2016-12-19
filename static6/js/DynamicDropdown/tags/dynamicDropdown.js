@@ -52,18 +52,6 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
         };
 
 
-
-        // TODO
-        //if (typeof this.data == "string" || typeof this.data == "number") {
-        //    if (in_array(this.data, validValues)) {
-        //        options.value = this.data;
-        //    } else {
-        //        options.value = "";
-        //    }
-        //} else {
-        //    options.value = "";
-        //}
-
         return new Ext.form.ComboBox(options);
     },
 
@@ -138,15 +126,8 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
             autoLoadOnValue: true,
             value: this.data,
             listConfig: {
-                 getInnerTpl: function(displayField) {
-                     return '<tpl for="."><tpl if="published == true">{key}<tpl else><div class="x-combo-item-disabled x-item-disabled">{key}</div></tpl></tpl>';
-                 }
-            },
-            listeners: {
-                beforeselect: function (combo, record, index, e) {
-                    if (!record.data.published) {
-                        e.stopEvent();
-                    }
+                getInnerTpl: function(displayField) {
+                    return '<tpl for="."><tpl if="published == true">{key}<tpl else><div class="x-combo-item-disabled x-item-disabled">{key}</div></tpl></tpl>';
                 }
             }
         };
@@ -155,18 +136,17 @@ pimcore.object.tags.dynamicDropdown = Class.create(pimcore.object.tags.select, {
             options.width = this.fieldConfig.width;
         }
 
-        // TODO
-        //if (typeof this.data == "string" || typeof this.data == "number") {
-        //    if (in_array(this.data, validValues)) {
-        //        options.value = this.data;
-        //    } else {
-        //        options.value = "";
-        //    }
-        //} else {
-        //    options.value = "";
-        //}
 
         this.component = new Ext.form.ComboBox(options);
+
+        if (!this.fieldConfig.parked_selectable) {
+            this.component.addListener("beforeselect", function (combo, record, index, e) {
+                if (!record.data.published) {
+                    return false;
+                }
+            });
+        }
+
         return this.component;
     }    
 
