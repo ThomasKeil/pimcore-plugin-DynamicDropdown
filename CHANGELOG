@@ -67,3 +67,10 @@ Patch kindly provided by Thomas Akkermans (http://www.pimcore.org/board/memberli
 - fixed Issue #17: Grid display broken for Dynamic Dropdown (select)
 
 New Features (due to Issue #17): Grid edit for single Dynamic Dropdowns
+
+0.9.3
+=====================
+- fixed Issue #20: Now reading new php class definition files instead of obsolete psf
+- Unpublished objects are now displayed in grey in single combobox
+- Unpublished objects can now be configured to be unselectable.
+- The options controller can now report errors to the frontend.
