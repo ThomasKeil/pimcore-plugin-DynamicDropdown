@@ -58,6 +58,8 @@ pimcore.object.tags.superboxselect = Class.create(pimcore.object.tags.multihref,
             fieldLabel: this.fieldConfig.title,
             store: this.options_store,
             width: 600,
+            typeAhead: true,
+            queryMode: "local",
             listeners: {
                 blur: {
                     fn: function() {
