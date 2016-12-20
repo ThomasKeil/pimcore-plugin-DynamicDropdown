@@ -4,7 +4,7 @@
     "description":"Populate Comboboxes with Object content of a selected folder",
     "keywords":["pimcore", "plugin", "Dynamic Dropbox Module"],
     "homepage":"https://github.com/ThomasKeil/pimcore-plugin-DynamicDropdown",
-    "license": "GPLv3",
+    "license": "GPL-3.0",
     "authors":[
         {
             "name":"Thomas Keil",
@@ -12,6 +12,11 @@
             "role": "Developer"
         }
     ],
+    "support": {
+        "email": "thomas@weblizards.de",
+        "issues": "https://github.com/ThomasKeil/pimcore-plugin-DynamicDropdown/issues",
+        "irc": "irc://irc.freenode.org/composer"
+    },
     "require":{
         "pimcore/installer-plugin": ">=1"
     },
