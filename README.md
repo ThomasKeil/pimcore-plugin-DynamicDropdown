@@ -74,3 +74,45 @@ a dropdown input field (ExtJS: Combobox). Every option is provided by an object
 in a configured folder, by a configured method.
 The folder can have nested subfolders, but only one type of object class can provide
 the data.
+
+This input element extends pimcore's [href](https://www.pimcore.org/docs/latest/Objects/Object_Classes/Data_Types/Relation_Types.html) element. 
+Programatically, you can set it's value with the API like you'd do with a href.
+
+### Dynamic Dropdown (multiselect)
+
+The multiselect Dynamic Dropdown is like the single select version, but you can select 
+more than one item. It uses [ExtJS' UX MultiSelect](http://docs.sencha.com/extjs/6.0.2/classic/Ext.ux.form.MultiSelect.html).
+It extends pimcore's multiselection. Setting it with the API is like working with a
+multiselection.
+
+### Itemselector
+
+The Itemselector is like the Multiselect, but uses the [ItemSelector](http://docs.sencha.com/extjs/6.0.2/classic/Ext.ux.form.ItemSelector.html)
+as UI element.
+
+### SuperboxSelect
+
+The SuperboxSelect is like the Multiselect, but uses the [TagField](http://docs.sencha.com/extjs/6.0.2/classic/Ext.form.field.Tag.html)
+as UI element.
+
+## Example
+
+```
+use Pimcore\Model\Object;
+  
+$myHrefElement = Document::getById(23);
+$myOtherHrefElement = Document::getById(23);
+ 
+$myMultihrefElements[] = $myHrefElement;
+$myMultihrefElements[] = $myOtherHrefElement;
+ 
+$myObjectsElements[] = Object\Product::getById(98);
+$myObjectsElements[] = Object\Product::getById(99);
+ 
+$object->setDynamicDropdown($myHrefElement);
+$object->setDynamicDropdownMultiple($myMultihrefElements);
+$object->setItemselector($myMultihrefElements);
+$object->setSuperboxSelect($myMultihrefElements);
+ 
+$object->save();
+```
