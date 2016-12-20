@@ -20,22 +20,45 @@ composer require thomas-keil/dynamic-dropdown
 
 ## Configuring
 
-The plugin provides several input elements and thus extends pimcores
-class data compent menu in the section "Select".
+The plugin doesn't require any configuration but provides several input elements.
+These input fields can be configured like any other of pimcore's input elements.
 
+## Usage
+
+The plugin extends pimcores class data compent menu in the section "Select".
+Four new elements can be used:
+
+* Dynamic Dropdown: a single select dropdown menu
+  ![Single select example](docs/singleselect_example.png)
+
+* Dynamic Dropdown (multiselect): a box with several items to select. Select one
+  by clicking it, all other will be deselected. Hold the CTRL-key while clicking
+  to add the item without deselecting the others.
+  ![Multiselect example](docs/multiselect_example.png)
+  
+* Itemselector: the items are displayed in two columns, on the left are the available
+  (or remaining) items, on the right are the selected ones.
+  Transfer to the other column by doubleclicking or using the left/right arrow button.
+  Up/down arrow buttons arrange the order.
+  ![Itemselector example](docs/itemselector_example.png)
+    
+* Superbox Select: Like a "tag field". Select one item and it get's displayed,
+  click the little "x" next to it to remove it.
+  ![Superbox Select example](docs/superboxselect_example.png)
+    
 ### Options
 
 The options for all input elements are the same, only the way the information is
 presented differes.
 
-![Dynamic Dropdown](docs/options.png)
+![Options](docs/options.png)
 
 Following options need to be set:
 
 * Width: the width of input element
 * Parent ID: the path to the folder containing the source objects. You can use drag&drop
 * Recursive: check this if objects in subfolders shall be used as well
-* Unpublished selectable: usually unpublished objects will be displayed in the item list, but be of a grey color and unselectable. Check this if you want unpublished objects to be selectable.
+* Unpublished selectable: usually unpublished objects will be displayed in the item list, but be of a grey color and unselectable. Check this if you want unpublished objects to be selectable. This option is currently only used by the single select dropdown!
 * Sort by: either "Value" or "Id". By value is alphabetically ascending, by Id is numerically ascending by pimcore's object id.
 * Allowed classes: the object class, that provides the data. Only objects of this class we be considered, all others will be ignored.
 * Method: the method that provides the data. The possible methods are extracted from the class definition of the source class.
