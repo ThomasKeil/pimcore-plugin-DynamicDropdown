@@ -118,9 +118,9 @@ class Dynamicdropdown_DynamicdropdownController extends Action
 
             foreach ($children as $child) {
                 /** @var Object\Concrete $child */
-                $class = get_class($child);
-                switch ($class) {
-                      case "Pimcore\\Model\\Object\\Folder":
+
+                switch (true) {
+                      case $child instanceof Pimcore\Model\Object\Folder:
                         /**
                          * @var Object\Folder $child
                          */
@@ -128,7 +128,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                         if ($this->getParam("source_recursive") == "true")
                             $options = $this->walk_path($child, $options, $path.$this->separator.$key);
                         break;
-                      case $object_name:
+                      case $child instanceof $object_name:
                         $key = $usesI18n ? $child->$source($current_lang) : $child->$source();
                         $options[] = array(
                             "value" => $child->getId(),
@@ -140,6 +140,7 @@ class Dynamicdropdown_DynamicdropdownController extends Action
                         break;
                 }
             }
+
         }
 
         return $options;
