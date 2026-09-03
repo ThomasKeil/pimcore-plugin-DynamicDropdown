@@ -4,6 +4,8 @@
 
 Dynamic Dropdown allows you to populate pimcore input fields with the content of other objcts.
 
+**Outdated!** For Symfony-based pimcore Versions Please use https://github.com/weblizards-gmbh/dynamic-dropdown-bundle instead.
+
 ![Interface](docs/DynamicDropdown.png)
 
 ## Getting started
